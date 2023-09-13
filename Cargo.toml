@@ -1,0 +1,350 @@
+[workspace.package]
+authors = ["Grid Operating Systems <admin@gos.network>"]
+edition = "2021"
+repository = "https://github.com/gridoperatingsystems/gosb-sdk.git"
+license = "GPL-3.0-only"
+
+[workspace]
+resolver = "2"
+
+members = [
+	"gosb/bin/node/bench",
+	"gosb/bin/node/cli",
+	"gosb/bin/node/executor",
+	"gosb/bin/node/inspect",
+	"gosb/bin/node/primitives",
+	"gosb/bin/node/rpc",
+	"gosb/bin/node/runtime",
+	"gosb/bin/node/testing",
+	"gosb/bin/utils/chain-spec-builder",
+	"gosb/bin/utils/subkey",
+	"gosb/client/allocator",
+	"gosb/client/api",
+	"gosb/client/authority-discovery",
+	"gosb/client/basic-authorship",
+	"gosb/client/block-builder",
+	"gosb/client/chain-spec",
+	"gosb/client/chain-spec/derive",
+	"gosb/client/cli",
+	"gosb/client/consensus/aura",
+	"gosb/client/consensus/babe",
+	"gosb/client/consensus/babe/rpc",
+	"gosb/client/consensus/beefy",
+	"gosb/client/consensus/beefy/rpc",
+	"gosb/client/consensus/common",
+	"gosb/client/consensus/epochs",
+	"gosb/client/consensus/grandpa",
+	"gosb/client/consensus/grandpa/rpc",
+	"gosb/client/consensus/manual-seal",
+	"gosb/client/consensus/pow",
+	"gosb/client/consensus/slots",
+	"gosb/client/db",
+	"gosb/client/executor",
+	"gosb/client/executor/common",
+	"gosb/client/executor/runtime-test",
+	"gosb/client/executor/wasmtime",
+	"gosb/client/informant",
+	"gosb/client/keystore",
+	"gosb/client/merkle-mountain-range",
+	"gosb/client/merkle-mountain-range/rpc",
+	"gosb/client/network",
+	"gosb/client/network/bitswap",
+	"gosb/client/network/common",
+	"gosb/client/network/light",
+	"gosb/client/network/statement",
+	"gosb/client/network/sync",
+	"gosb/client/network/test",
+	"gosb/client/network/transactions",
+	"gosb/client/network-gossip",
+	"gosb/client/offchain",
+	"gosb/client/proposer-metrics",
+	"gosb/client/rpc",
+	"gosb/client/rpc-api",
+	"gosb/client/rpc-servers",
+	"gosb/client/rpc-spec-v2",
+	"gosb/client/service",
+	"gosb/client/service/test",
+	"gosb/client/state-db",
+	"gosb/client/statement-store",
+	"gosb/client/storage-monitor",
+	"gosb/client/sync-state-rpc",
+	"gosb/client/sysinfo",
+	"gosb/client/telemetry",
+	"gosb/client/tracing",
+	"gosb/client/tracing/proc-macro",
+	"gosb/client/transaction-pool",
+	"gosb/client/transaction-pool/api",
+	"gosb/client/utils",
+	"gosb/frame/alliance",
+	"gosb/frame/asset-conversion",
+	"gosb/frame/asset-rate",
+	"gosb/frame/assets",
+	"gosb/frame/atomic-swap",
+	"gosb/frame/aura",
+	"gosb/frame/authority-discovery",
+	"gosb/frame/authorship",
+	"gosb/frame/babe",
+	"gosb/frame/bags-list",
+	"gosb/frame/bags-list/fuzzer",
+	"gosb/frame/bags-list/remote-tests",
+	"gosb/frame/balances",
+	"gosb/frame/beefy",
+	"gosb/frame/beefy-mmr",
+	"gosb/frame/benchmarking",
+	"gosb/frame/benchmarking/pov",
+	"gosb/frame/bounties",
+	"gosb/frame/broker",
+	"gosb/frame/child-bounties",
+	"gosb/frame/collective",
+	"gosb/frame/contracts",
+	"gosb/frame/contracts/primitives",
+	"gosb/frame/contracts/proc-macro",
+	"gosb/frame/conviction-voting",
+	"gosb/frame/core-fellowship",
+	"gosb/frame/democracy",
+	"gosb/frame/election-provider-multi-phase",
+	"gosb/frame/election-provider-multi-phase/test-staking-e2e",
+	"gosb/frame/election-provider-support",
+	"gosb/frame/election-provider-support/benchmarking",
+	"gosb/frame/election-provider-support/solution-type",
+	"gosb/frame/election-provider-support/solution-type/fuzzer",
+	"gosb/frame/elections-phragmen",
+	"gosb/frame/examples",
+	"gosb/frame/examples/basic",
+	"gosb/frame/examples/default-config",
+	"gosb/frame/examples/dev-mode",
+	"gosb/frame/examples/kitchensink",
+	"gosb/frame/examples/offchain-worker",
+	"gosb/frame/examples/split",
+	"gosb/frame/executive",
+	"gosb/frame/fast-unstake",
+	"gosb/frame/glutton",
+	"gosb/frame/grandpa",
+	"gosb/frame/identity",
+	"gosb/frame/im-online",
+	"gosb/frame/indices",
+	"gosb/frame/insecure-randomness-collective-flip",
+	"gosb/frame/lottery",
+	"gosb/frame/membership",
+	"gosb/frame/merkle-mountain-range",
+	"gosb/frame/message-queue",
+	"gosb/frame/multisig",
+	"gosb/frame/nft-fractionalization",
+	"gosb/frame/nfts",
+	"gosb/frame/nfts/runtime-api",
+	"gosb/frame/nicks",
+	"gosb/frame/nis",
+	"gosb/frame/node-authorization",
+	"gosb/frame/nomination-pools",
+	"gosb/frame/nomination-pools/benchmarking",
+	"gosb/frame/nomination-pools/fuzzer",
+	"gosb/frame/nomination-pools/runtime-api",
+	"gosb/frame/nomination-pools/test-staking",
+	"gosb/frame/offences",
+	"gosb/frame/offences/benchmarking",
+	"gosb/frame/paged-list",
+	"gosb/frame/paged-list/fuzzer",
+	"gosb/frame/preimage",
+	"gosb/frame/proxy",
+	"gosb/frame/ranked-collective",
+	"gosb/frame/recovery",
+	"gosb/frame/referenda",
+	"gosb/frame/remark",
+	"gosb/frame/root-offences",
+	"gosb/frame/root-testing",
+	"gosb/frame/safe-mode",
+	"gosb/frame/salary",
+	"gosb/frame/scheduler",
+	"gosb/frame/scored-pool",
+	"gosb/frame/session",
+	"gosb/frame/session/benchmarking",
+	"gosb/frame/society",
+	"gosb/frame/staking",
+	"gosb/frame/staking/reward-curve",
+	"gosb/frame/staking/reward-fn",
+	"gosb/frame/staking/runtime-api",
+	"gosb/frame/state-trie-migration",
+	"gosb/frame/statement",
+	"gosb/frame/sudo",
+	"gosb/frame/support",
+	"gosb/frame/support/procedural",
+	"gosb/frame/support/procedural/tools",
+	"gosb/frame/support/procedural/tools/derive",
+	"gosb/frame/support/test",
+	"gosb/frame/support/test/compile_pass",
+	"gosb/frame/support/test/pallet",
+	"gosb/frame/system",
+	"gosb/frame/system/benchmarking",
+	"gosb/frame/system/rpc/runtime-api",
+	"gosb/frame/timestamp",
+	"gosb/frame/tips",
+	"gosb/frame/transaction-payment",
+	"gosb/frame/transaction-payment/asset-conversion-tx-payment",
+	"gosb/frame/transaction-payment/asset-tx-payment",
+	"gosb/frame/transaction-payment/rpc",
+	"gosb/frame/transaction-payment/rpc/runtime-api",
+	"gosb/frame/transaction-storage",
+	"gosb/frame/treasury",
+	"gosb/frame/try-runtime",
+	"gosb/frame/tx-pause",
+	"gosb/frame/uniques",
+	"gosb/frame/utility",
+	"gosb/frame/vesting",
+	"gosb/frame/whitelist",
+	"gosb/primitives/api",
+	"gosb/primitives/api/proc-macro",
+	"gosb/primitives/api/test",
+	"gosb/primitives/application-crypto",
+	"gosb/primitives/application-crypto/test",
+	"gosb/primitives/arithmetic",
+	"gosb/primitives/arithmetic/fuzzer",
+	"gosb/primitives/authority-discovery",
+	"gosb/primitives/block-builder",
+	"gosb/primitives/blockchain",
+	"gosb/primitives/consensus/aura",
+	"gosb/primitives/consensus/babe",
+	"gosb/primitives/consensus/beefy",
+	"gosb/primitives/consensus/common",
+	"gosb/primitives/consensus/grandpa",
+	"gosb/primitives/consensus/pow",
+	"gosb/primitives/consensus/sassafras",
+	"gosb/primitives/consensus/slots",
+	"gosb/primitives/core",
+	"gosb/primitives/core/hashing",
+	"gosb/primitives/core/hashing/proc-macro",
+	"gosb/primitives/crypto/ec-utils",
+	"gosb/primitives/database",
+	"gosb/primitives/debug-derive",
+	"gosb/primitives/externalities",
+	"gosb/primitives/genesis-builder",
+	"gosb/primitives/inherents",
+	"gosb/primitives/io",
+	"gosb/primitives/keyring",
+	"gosb/primitives/keystore",
+	"gosb/primitives/maybe-compressed-blob",
+	"gosb/primitives/merkle-mountain-range",
+	"gosb/primitives/metadata-ir",
+	"gosb/primitives/npos-elections",
+	"gosb/primitives/npos-elections/fuzzer",
+	"gosb/primitives/offchain",
+	"gosb/primitives/panic-handler",
+	"gosb/primitives/rpc",
+	"gosb/primitives/runtime",
+	"gosb/primitives/runtime-interface",
+	"gosb/primitives/runtime-interface/proc-macro",
+	"gosb/primitives/runtime-interface/test",
+	"gosb/primitives/runtime-interface/test-wasm",
+	"gosb/primitives/runtime-interface/test-wasm-deprecated",
+	"gosb/primitives/session",
+	"gosb/primitives/staking",
+	"gosb/primitives/state-machine",
+	"gosb/primitives/statement-store",
+	"gosb/primitives/std",
+	"gosb/primitives/storage",
+	"gosb/primitives/test-primitives",
+	"gosb/primitives/timestamp",
+	"gosb/primitives/tracing",
+	"gosb/primitives/transaction-pool",
+	"gosb/primitives/transaction-storage-proof",
+	"gosb/primitives/trie",
+	"gosb/primitives/version",
+	"gosb/primitives/version/proc-macro",
+	"gosb/primitives/wasm-interface",
+	"gosb/primitives/weights",
+	"gosb/test-utils",
+	"gosb/test-utils/cli",
+	"gosb/test-utils/client",
+	"gosb/test-utils/runtime",
+	"gosb/test-utils/runtime/client",
+	"gosb/test-utils/runtime/transaction-pool",
+	"gosb/utils/binary-merkle-tree",
+	"gosb/utils/build-script-utils",
+	"gosb/utils/fork-tree",
+	"gosb/utils/frame/benchmarking-cli",
+	"gosb/utils/frame/frame-utilities-cli",
+	"gosb/utils/frame/generate-bags",
+	"gosb/utils/frame/generate-bags/node-runtime",
+	"gosb/utils/frame/remote-externalities",
+	"gosb/utils/frame/rpc/client",
+	"gosb/utils/frame/rpc/state-trie-migration-rpc",
+	"gosb/utils/frame/rpc/support",
+	"gosb/utils/frame/rpc/system",
+	"gosb/utils/frame/try-runtime/cli",
+	"gosb/utils/prometheus",
+	"gosb/utils/wasm-builder",
+]
+
+[profile.release]
+# Polkadot runtime requires unwinding.
+panic = "unwind"
+opt-level = 3
+
+# make sure dev builds with backtrace do
+# not slow us down
+[profile.dev.package.backtrace]
+inherits = "release"
+
+[profile.production]
+inherits = "release"
+lto = true
+codegen-units = 1
+
+[profile.testnet]
+inherits = "release"
+debug = 1               # debug symbols are useful for profilers
+debug-assertions = true
+overflow-checks = true
+
+# The list of dependencies below (which can be both direct and indirect dependencies) are crates
+# that are suspected to be CPU-intensive, and that are unlikely to require debugging (as some of
+# their debug info might be missing) or to require to be frequently recompiled. We compile these
+# dependencies with `opt-level=3` even in "dev" mode in order to make "dev" mode more usable.
+# The majority of these crates are cryptographic libraries.
+#
+# If you see an error mentioning "profile package spec ... did not match any packages", it
+# probably concerns this list.
+#
+# This list is ordered alphabetically.
+[profile.dev.package]
+blake2 = { opt-level = 3 }
+blake2b_simd = { opt-level = 3 }
+chacha20poly1305 = { opt-level = 3 }
+cranelift-codegen = { opt-level = 3 }
+cranelift-wasm = { opt-level = 3 }
+crc32fast = { opt-level = 3 }
+crossbeam-deque = { opt-level = 3 }
+crypto-mac = { opt-level = 3 }
+curve25519-dalek = { opt-level = 3 }
+ed25519-dalek = { opt-level = 3 }
+flate2 = { opt-level = 3 }
+futures-channel = { opt-level = 3 }
+hash-db = { opt-level = 3 }
+hashbrown = { opt-level = 3 }
+hmac = { opt-level = 3 }
+httparse = { opt-level = 3 }
+integer-sqrt = { opt-level = 3 }
+keccak = { opt-level = 3 }
+libm = { opt-level = 3 }
+librocksdb-sys = { opt-level = 3 }
+libsecp256k1 = { opt-level = 3 }
+libz-sys = { opt-level = 3 }
+mio = { opt-level = 3 }
+nalgebra = { opt-level = 3 }
+num-bigint = { opt-level = 3 }
+parking_lot = { opt-level = 3 }
+parking_lot_core = { opt-level = 3 }
+percent-encoding = { opt-level = 3 }
+primitive-types = { opt-level = 3 }
+ring = { opt-level = 3 }
+rustls = { opt-level = 3 }
+sha2 = { opt-level = 3 }
+sha3 = { opt-level = 3 }
+smallvec = { opt-level = 3 }
+snow = { opt-level = 3 }
+substrate-bip39 = { opt-level = 3 }
+twox-hash = { opt-level = 3 }
+uint = { opt-level = 3 }
+wasmi = { opt-level = 3 }
+x25519-dalek = { opt-level = 3 }
+yamux = { opt-level = 3 }
+zeroize = { opt-level = 3 }
