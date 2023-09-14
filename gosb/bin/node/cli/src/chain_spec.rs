@@ -448,7 +448,7 @@ pub fn live_genesis(
 ) -> RuntimeGenesisConfig {
 	let mut endowed_accounts: Vec<AccountId> = endowed_accounts.unwrap_or_else(|| {
 		vec![
-			
+
 		]
 	});
 	// endow all authorities and nominators.
