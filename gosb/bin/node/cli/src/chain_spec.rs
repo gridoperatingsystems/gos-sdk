@@ -33,7 +33,7 @@ use serde::{Deserialize, Serialize};
 use sp_authority_discovery::AuthorityId as AuthorityDiscoveryId;
 use sp_consensus_babe::AuthorityId as BabeId;
 use sp_core::{
-	crypto::{Ss58Codec,UncheckedInto}, 
+	crypto::{Ss58Codec,UncheckedInto,AccountId32}, 
 	sr25519, Pair, Public
 };
 use sp_runtime::{
@@ -48,6 +48,7 @@ type AccountPublic = <Signature as Verify>::Signer;
 
 const STAGING_TELEMETRY_URL: &str = "wss://telemetry.polkadot.io/submit/";
 
+const SYMBOL_TEST : &str = "GOST";
 const SYMBOL : &str = "GOS";
 const DECIMALS : i32 = 12;
 
@@ -183,10 +184,18 @@ fn staging_testnet_config_genesis() -> RuntimeGenesisConfig {
 
 /// Staging testnet config.
 pub fn staging_testnet_config() -> ChainSpec {
+	// configure GOS currency symbol for the native coin
+	let symbol_value = json!(SYMBOL_TEST);
+	let token_decimals = json!(DECIMALS);
+
+	let mut gos_props : Properties = Properties::new();
+	gos_props.insert("tokenSymbol".to_string(), symbol_value);
+	gos_props.insert("tokenDecimals".to_string(), token_decimals);
+
 	let boot_nodes = vec![];
 	ChainSpec::from_genesis(
-		"Staging Testnet",
-		"staging_testnet",
+		"GOS Staging Testnet",
+		"gos_staging_testnet",
 		ChainType::Live,
 		staging_testnet_config_genesis,
 		boot_nodes,
@@ -194,9 +203,11 @@ pub fn staging_testnet_config() -> ChainSpec {
 			TelemetryEndpoints::new(vec![(STAGING_TELEMETRY_URL.to_string(), 0)])
 				.expect("Staging telemetry url is valid; qed"),
 		),
+		// Protocol ID
+		Some("gost"),
 		None,
-		None,
-		None,
+		// Properties
+		Some(gos_props),
 		Default::default(),
 	)
 }
@@ -228,6 +239,34 @@ pub fn authority_keys_from_seed(
 		get_from_seed::<ImOnlineId>(seed),
 		get_from_seed::<AuthorityDiscoveryId>(seed),
 	)
+}
+
+/// Helper function to generate stash, controller and session key for account address.
+pub fn authority_keys_from_acct(
+	sudo_str: &str,
+	sudo_stash_str: &str,
+	gran_str: &str
+) -> (AccountId, AccountId, GrandpaId, BabeId, ImOnlineId, AuthorityDiscoveryId) {
+	
+	let sudo_account: AccountId = Ss58Codec::from_ss58check(sudo_str).unwrap();
+	let sudo_stash: AccountId = Ss58Codec::from_ss58check(sudo_stash_str).unwrap();
+	let grandpa_account: GrandpaId = Ss58Codec::from_string(gran_str).unwrap();
+	let babe_account: BabeId = Ss58Codec::from_string(sudo_str).unwrap();
+	let im_account: ImOnlineId = Ss58Codec::from_string(sudo_str).unwrap();
+	let auth_discovery_account: AuthorityDiscoveryId = Ss58Codec::from_string(sudo_str).unwrap();
+	(
+		sudo_stash.clone(),
+		sudo_account.clone(),
+		grandpa_account,
+		babe_account,
+		im_account,
+		auth_discovery_account,
+	)
+}
+/// Helper function to decode ss58 to AccountId32
+pub fn ss58_to_account_id(ss58 : &str) -> Result<AccountId32, &str> {
+	let decoded = AccountId32::from_ss58check(ss58).map_err(|_| "Failed to decode SS58 address");
+	decoded
 }
 
 /// Helper function to create RuntimeGenesisConfig for testing.
@@ -352,7 +391,7 @@ pub fn testnet_genesis(
 		vesting: Default::default(),
 		assets: pallet_assets::GenesisConfig {
 			// This asset is used by the NIS pallet as counterpart currency.
-			assets: vec![(9, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1)],
+			assets: vec![(0, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1)],
 			..Default::default()
 		},
 		pool_assets: Default::default(),
@@ -432,151 +471,142 @@ pub fn local_testnet_config() -> ChainSpec {
 	)
 }
 
-/// Helper function to create RuntimeGenesisConfig for testing.
-pub fn live_genesis(
-	initial_authorities: Vec<(
-		AccountId,
-		AccountId,
-		GrandpaId,
-		BabeId,
-		ImOnlineId,
-		AuthorityDiscoveryId,
-	)>,
-	initial_nominators: Vec<AccountId>,
-	root_key: AccountId,
-	endowed_accounts: Option<Vec<AccountId>>,
-) -> RuntimeGenesisConfig {
-	let mut endowed_accounts: Vec<AccountId> = endowed_accounts.unwrap_or_else(|| {
-		vec![
+/// Genesis Configuration Settings
+fn spectral_config_genesis() -> RuntimeGenesisConfig {
+	
+	// GOS SUDO, STASH, GRANDPA
+	let sudo : &str = "5Gbvu58afWJabLsuUQ3Y8Y3KfJ6g9GGtabipjs5fZTSFp2DX";
+	let sudo_stash : &str = "5G44CfowYQramZFYuYFGnHrCQ2LRJUmWa4o5c7GK279mkAhW";
+	let sudo_gran : &str = "5H5jpugVp68b8LS9nfhcWAYbs4VPEYyYumY3zy9FcKtWawps";
 
-		]
-	});
-	// endow all authorities and nominators.
-	initial_authorities
-		.iter()
-		.map(|x| &x.0)
-		.chain(initial_nominators.iter())
-		.for_each(|x| {
-			if !endowed_accounts.contains(x) {
-				endowed_accounts.push(x.clone())
-			}
-		});
+	// GOS AUTH PRIMARY, STASH, GRANDPA
+	let auth_primary : &str = "5ELwfBR3LWP6gXhah8xT7o9yUPpMD62wMSkS8fKSiGA3nVUx";
+	let auth_primary_stash: &str = "5DvEm6xrmYFbx1Mbh2AYxhJ8UBYRpBf5bCtXpnNcqyd2QJtP";
+	let auth_primary_gran: &str = "5F4hFerb6ommCqeP5r3gGKTZ2rjCZhrkxNc8y5ZrnXtZSrqt";
+	
+	// GOS AUTH PRIMARY, STASH, GRANDPA
+	let auth_secondary : &str = "5GNmbb63EhhYoAn8HjKkheNQSzmbcDPn11UMqyLKZCzLVVce";
+	let auth_secondary_stash: &str = "5FEU3tuJsLhMXm411kPZKtsj7acijoj9MhPCtnMsWDALx894";
+	let auth_secondary_gran: &str = "5G2bGuzhdE5yxDp6dSXBMnM2vfttYJTrPHR6iVBXjTTUeeNs";
+	
+	// GOS OPS,STASH 
+	let ops_primary : &str = "5EqHrsRmjb5NGjGndzLEB3CkYdawxhJ5D7so2edSRZtpHKQF";
 
-	// stakers: all validators and nominators.
-	let mut rng = rand::thread_rng();
-	let stakers = initial_authorities
-		.iter()
-		.map(|x| (x.0.clone(), x.0.clone(), STASH, StakerStatus::Validator))
-		.chain(initial_nominators.iter().map(|x| {
-			use rand::{seq::SliceRandom, Rng};
-			let limit = (MaxNominations::get() as usize).min(initial_authorities.len());
-			let count = rng.gen::<usize>() % limit;
-			let nominations = initial_authorities
-				.as_slice()
-				.choose_multiple(&mut rng, count)
-				.into_iter()
-				.map(|choice| choice.0.clone())
-				.collect::<Vec<_>>();
-			(x.clone(), x.clone(), STASH, StakerStatus::Nominator(nominations))
-		}))
-		.collect::<Vec<_>>();
-
-	let num_endowed_accounts = endowed_accounts.len();
-	// 1 Billion
-	const ENDOWMENT: Balance = 10_000_000 * DOLLARS;
-	const STASH: Balance = ENDOWMENT / 1000;
-
-	RuntimeGenesisConfig {
-		system: SystemConfig { code: wasm_binary_unwrap().to_vec(), ..Default::default() },
-		balances: BalancesConfig {
-			balances: endowed_accounts.iter().cloned().map(|x| (x, ENDOWMENT)).collect(),
-		},
-		indices: IndicesConfig { indices: vec![] },
-		session: SessionConfig {
-			keys: initial_authorities
-				.iter()
-				.map(|x| {
-					(
-						x.0.clone(),
-						x.0.clone(),
-						session_keys(x.2.clone(), x.3.clone(), x.4.clone(), x.5.clone()),
-					)
-				})
-				.collect::<Vec<_>>(),
-		},
-		staking: StakingConfig {
-			validator_count: initial_authorities.len() as u32,
-			minimum_validator_count: initial_authorities.len() as u32,
-			invulnerables: initial_authorities.iter().map(|x| x.0.clone()).collect(),
-			slash_reward_fraction: Perbill::from_percent(10),
-			stakers,
-			..Default::default()
-		},
-		democracy: DemocracyConfig::default(),
-		elections: ElectionsConfig {
-			members: endowed_accounts
-				.iter()
-				.take((num_endowed_accounts + 1) / 2)
-				.cloned()
-				.map(|member| (member, STASH))
-				.collect(),
-		},
-		council: CouncilConfig::default(),
-		technical_committee: TechnicalCommitteeConfig {
-			members: endowed_accounts
-				.iter()
-				.take((num_endowed_accounts + 1) / 2)
-				.cloned()
-				.collect(),
-			phantom: Default::default(),
-		},
-		sudo: SudoConfig { key: Some(root_key) },
-		babe: BabeConfig {
-			epoch_config: Some(gos_runtime::BABE_GENESIS_EPOCH_CONFIG),
-			..Default::default()
-		},
-		im_online: ImOnlineConfig { keys: vec![] },
-		authority_discovery: Default::default(),
-		grandpa: Default::default(),
-		technical_membership: Default::default(),
-		treasury: Default::default(),
-		vesting: Default::default(),
-		assets: pallet_assets::GenesisConfig {
-			// This asset is used by the NIS pallet as counterpart currency.
-			assets: vec![(9, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1)],
-			..Default::default()
-		},
-		pool_assets: Default::default(),
-		transaction_storage: Default::default(),
-		transaction_payment: Default::default(),
-		safe_mode: Default::default(),
-		tx_pause: Default::default(),
-		nomination_pools: NominationPoolsConfig {
-			min_create_bond: 10 * DOLLARS,
-			min_join_bond: 1 * DOLLARS,
-			..Default::default()
-		},
-		glutton: Default::default(),
-	}
-}
-
-fn live_config_genesis() -> RuntimeGenesisConfig {
-	let sudo_account = Ss58Codec::from_string("5Gbvu58afWJabLsuUQ3Y8Y3KfJ6g9GGtabipjs5fZTSFp2DX").unwrap();
-	live_genesis(
+	// GOS TEAM
+	let team : &str = "5CAcPDwxRzzCJsFRipx53T7pBzkrtrxQ3JhwiWdxmNZzTgBX";
+	
+	testnet_genesis(
 		// Initial PoA authorities
 		vec![
-			authority_keys_from_seed("Alice")
-			// Ss58Codec::from_string("5Gbvu58afWJabLsuUQ3Y8Y3KfJ6g9GGtabipjs5fZTSFp2DX").unwrap(),
+			authority_keys_from_acct(sudo, sudo_stash, sudo_gran),
+			authority_keys_from_acct(auth_primary, auth_primary_stash, auth_primary_gran),
+			authority_keys_from_acct(auth_secondary, auth_secondary_stash, auth_secondary_gran)
 		],
 		// Initial_nominators
 		vec![],
 		// Sudo Account
-		// Ss58Codec::from_string("5Gbvu58afWJabLsuUQ3Y8Y3KfJ6g9GGtabipjs5fZTSFp2DX").unwrap(),
-		sudo_account,
+		Ss58Codec::from_string(sudo).unwrap(),
 		// Pre-funded accounts
 		vec![
-			
-			// stash accounts 
+			Ss58Codec::from_string(sudo).unwrap(),
+			Ss58Codec::from_string(sudo_stash).unwrap(),
+			Ss58Codec::from_string(auth_primary).unwrap(),
+			Ss58Codec::from_string(auth_primary_stash).unwrap(),
+			Ss58Codec::from_string(auth_secondary).unwrap(),
+			Ss58Codec::from_string(auth_secondary_stash).unwrap(),
+
+			Ss58Codec::from_string(ops_primary).unwrap(),
+			Ss58Codec::from_string(team).unwrap(),
+		].into(),
+	)
+}
+
+/// Live config generator with two Validators
+pub fn spectral_config() -> Result<ChainSpec, String> {
+	// configure GOS currency symbol for the native coin
+	let symbol_value = json!(SYMBOL_TEST);
+	let token_decimals = json!(DECIMALS);
+
+	let mut gos_props : Properties = Properties::new();
+	gos_props.insert("tokenSymbol".to_string(), symbol_value);
+	gos_props.insert("tokenDecimals".to_string(), token_decimals);
+
+	Ok(ChainSpec::from_genesis(
+		// Name
+		"GOS Spectral",
+		// ID
+		"dev",
+		ChainType::Development,
+		// Spectral Genesis 
+		spectral_config_genesis,
+		// Bootnodes
+		vec![],
+		// Telemetry
+		None,
+		// Protocol ID
+		Some("gos"),
+		None,
+		// Properties
+		Some(gos_props),
+		// Extensions
+		Default::default(),
+	))
+}
+
+/// Genesis Configuration Settings
+fn live_config_genesis() -> RuntimeGenesisConfig {
+
+	// GOS SUDO, STASH, GRANDPA
+	let sudo : &str = "5DP6etCWFMVzD8PdYUyoqApqgX6wgk6Uyc7r5ZXYsFFZfTrj";
+	let sudo_stash : &str = "5HH2EKHXztmMiYFdZAFqagAZcJv8XTpZaksemZYbtADUgzfa";
+	let sudo_gran : &str = "5CBMCQh1Hi8uAPzCqw95Us7JEksZFnCGYttbb2YywaWCG8Y6";
+
+	// GOS AUTH PRIMARY, STASH, GRANDPA
+	let auth_primary : &str = "5GNBha7QhsQkt7rRjzULo1RpshiqkwD4hFvqNfe1x2jETFcH";
+	let auth_primary_stash: &str = "5CSYC8SPwWgeQpZiRhxvwrehUoKujm8pqJZPw7d4buUL99VW";
+	let auth_primary_gran: &str = "5CY8YfDyYtTXTZXUW75Vnu5b7gwc1knCiN9EzkRNwxfBX3vo";
+	
+	// GOS AUTH SECONDARY, STASH, GRANDPA
+	let auth_secondary : &str = "5E1k39xTbrE5bcJpb8W9GHGi23hFnmdMt6LmoJsoQaTF63A3";
+	let auth_secondary_stash: &str = "5DtqHYoTyyPxxEC2horUh7f7KPQUSBwdFuLiHy5kiewHxgZc";
+	let auth_secondary_gran: &str = "5CAYMZTU4ZEwwvd1hTJZgFPyMbsaNgrtmiV6ZMUuuV7rSifi";
+	
+	// GOS AUTH TERTIARY, STASH, GRANDPA 
+	let auth_tertiary : &str = "5G6Cc9Zw4XLPM3hJUVFLCfa4i6BGtN8LDdxzj7uKK9LQcu8m";
+	let auth_tertiary_stash : &str = "5E27yuPHCLXDmXNaFwjKxzxXquFRAZ2PiFcEdbYsrv8XnKcQ";
+	let auth_tertiary_gran : &str = "5HNMRGMfxHnrdCLjUZufXtdnkuZbjASvv9oXMBTjRaxqEY2y";
+
+	// GOS OPS 
+	let ops_primary : &str = "5DxwsfGtcfpH8163VEGFG9CUMQRs9497oWewkghP242KgSqi";
+
+	// GOS TEAM
+	let team_a : &str = "5CArGgcLdBMaF9yBKTh3rcYF66KgcxGuf7fG4BjWzKiaxtce";
+	let team_b : &str = "5HQebPEwDigbHXMSPW1nq1KRuwZQehdBfVBn1cMrctw6FChf";
+	
+
+	testnet_genesis(
+		// Initial PoA authorities
+		vec![
+			authority_keys_from_acct(sudo, sudo_stash, sudo_gran),
+			authority_keys_from_acct(auth_primary, auth_primary_stash, auth_primary_gran),
+			authority_keys_from_acct(auth_secondary, auth_secondary_stash, auth_secondary_gran),
+			authority_keys_from_acct(auth_tertiary, auth_tertiary_stash, auth_tertiary_gran)
+		],
+		// Initial_nominators
+		vec![],
+		// Sudo Account
+		Ss58Codec::from_string(sudo).unwrap(),
+		// Pre-funded accounts
+		vec![
+			Ss58Codec::from_string(sudo).unwrap(),
+			Ss58Codec::from_string(sudo_stash).unwrap(),
+			Ss58Codec::from_string(auth_primary).unwrap(),
+			Ss58Codec::from_string(auth_primary_stash).unwrap(),
+			Ss58Codec::from_string(auth_secondary).unwrap(),
+			Ss58Codec::from_string(auth_secondary_stash).unwrap(),
+			Ss58Codec::from_string(ops_primary).unwrap(),
+			Ss58Codec::from_string(team_a).unwrap(),
+			Ss58Codec::from_string(team_b).unwrap(),
 		].into(),
 	)
 }
