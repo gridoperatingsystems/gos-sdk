@@ -111,8 +111,8 @@
         "multiplier": "1000000000000000000"
       },
       "staking": {
-        "validatorCount": 4,
-        "minimumValidatorCount": 4,
+        "validatorCount": 3,
+        "minimumValidatorCount": 3,
         "invulnerables": [
           "5CSYC8SPwWgeQpZiRhxvwrehUoKujm8pqJZPw7d4buUL99VW",
           "5DtqHYoTyyPxxEC2horUh7f7KPQUSBwdFuLiHy5kiewHxgZc",
