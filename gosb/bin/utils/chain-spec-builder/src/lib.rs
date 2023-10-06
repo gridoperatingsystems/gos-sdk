@@ -113,7 +113,7 @@ fn genesis_constructor(
 		.map(chain_spec::authority_keys_from_seed)
 		.collect::<Vec<_>>();
 
-	chain_spec::testnet_genesis(
+	chain_spec::genesis_config(
 		authorities,
 		nominator_accounts.to_vec(),
 		sudo_account.clone(),

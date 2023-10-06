@@ -179,7 +179,7 @@ fn staging_testnet_config_genesis() -> RuntimeGenesisConfig {
 
 	let endowed_accounts: Vec<AccountId> = vec![root_key.clone()];
 
-	testnet_genesis(initial_authorities, vec![], root_key, Some(endowed_accounts))
+	genesis_config(initial_authorities, vec![], root_key, Some(endowed_accounts))
 }
 
 /// Staging testnet config.
@@ -270,7 +270,7 @@ pub fn ss58_to_account_id(ss58 : &str) -> Result<AccountId32, &str> {
 }
 
 /// Helper function to create RuntimeGenesisConfig for testing.
-pub fn testnet_genesis(
+pub fn genesis_config(
 	initial_authorities: Vec<(
 		AccountId,
 		AccountId,
@@ -409,7 +409,7 @@ pub fn testnet_genesis(
 }
 
 fn development_config_genesis() -> RuntimeGenesisConfig {
-	testnet_genesis(
+	genesis_config(
 		vec![authority_keys_from_seed("Alice")],
 		vec![],
 		get_account_id_from_seed::<sr25519::Public>("Alice"),
@@ -447,7 +447,7 @@ pub fn development_config() -> ChainSpec {
 }
 
 fn local_testnet_genesis() -> RuntimeGenesisConfig {
-	testnet_genesis(
+	genesis_config(
 		vec![authority_keys_from_seed("Alice"), authority_keys_from_seed("Bob")],
 		vec![],
 		get_account_id_from_seed::<sr25519::Public>("Alice"),
@@ -471,13 +471,13 @@ pub fn local_testnet_config() -> ChainSpec {
 	)
 }
 
-/// Genesis Configuration Settings
+/// Genesis Testnet Configuration Settings
 fn spectral_config_genesis() -> RuntimeGenesisConfig {
 	
 	// GOS SUDO, STASH, GRANDPA
 	let sudo : &str = "5Gbvu58afWJabLsuUQ3Y8Y3KfJ6g9GGtabipjs5fZTSFp2DX";
 	let sudo_stash : &str = "5G44CfowYQramZFYuYFGnHrCQ2LRJUmWa4o5c7GK279mkAhW";
-	let sudo_gran : &str = "5H5jpugVp68b8LS9nfhcWAYbs4VPEYyYumY3zy9FcKtWawps";
+	let _sudo_gran : &str = "5H5jpugVp68b8LS9nfhcWAYbs4VPEYyYumY3zy9FcKtWawps";
 
 	// GOS AUTH PRIMARY, STASH, GRANDPA
 	let auth_primary : &str = "5ELwfBR3LWP6gXhah8xT7o9yUPpMD62wMSkS8fKSiGA3nVUx";
@@ -487,20 +487,18 @@ fn spectral_config_genesis() -> RuntimeGenesisConfig {
 	// GOS AUTH PRIMARY, STASH, GRANDPA
 	let auth_secondary : &str = "5GNmbb63EhhYoAn8HjKkheNQSzmbcDPn11UMqyLKZCzLVVce";
 	let auth_secondary_stash: &str = "5FEU3tuJsLhMXm411kPZKtsj7acijoj9MhPCtnMsWDALx894";
-	let auth_secondary_gran: &str = "5G2bGuzhdE5yxDp6dSXBMnM2vfttYJTrPHR6iVBXjTTUeeNs";
+	let _auth_secondary_gran: &str = "5G2bGuzhdE5yxDp6dSXBMnM2vfttYJTrPHR6iVBXjTTUeeNs";
 	
 	// GOS OPS,STASH 
 	let ops_primary : &str = "5EqHrsRmjb5NGjGndzLEB3CkYdawxhJ5D7so2edSRZtpHKQF";
 
-	// GOS TEAM
+	// GOS TEAM / FAUCET
 	let team : &str = "5CAcPDwxRzzCJsFRipx53T7pBzkrtrxQ3JhwiWdxmNZzTgBX";
 	
-	testnet_genesis(
+	genesis_config(
 		// Initial PoA authorities
 		vec![
-			authority_keys_from_acct(sudo, sudo_stash, sudo_gran),
 			authority_keys_from_acct(auth_primary, auth_primary_stash, auth_primary_gran),
-			authority_keys_from_acct(auth_secondary, auth_secondary_stash, auth_secondary_gran)
 		],
 		// Initial_nominators
 		vec![],
@@ -521,7 +519,7 @@ fn spectral_config_genesis() -> RuntimeGenesisConfig {
 	)
 }
 
-/// Live config generator with two Validators
+/// Testnet config generator with (1) Validator
 pub fn spectral_config() -> Result<ChainSpec, String> {
 	// configure GOS currency symbol for the native coin
 	let symbol_value = json!(SYMBOL_TEST);
@@ -584,7 +582,7 @@ fn live_config_genesis() -> RuntimeGenesisConfig {
 	let team_b : &str = "5HQebPEwDigbHXMSPW1nq1KRuwZQehdBfVBn1cMrctw6FChf";
 	
 
-	testnet_genesis(
+	genesis_config(
 		// Initial PoA authorities
 		vec![
 			authority_keys_from_acct(sudo, sudo_stash, sudo_gran),
@@ -611,7 +609,7 @@ fn live_config_genesis() -> RuntimeGenesisConfig {
 	)
 }
 
-/// Live config generator with two Validators
+/// Live config generator with (3) Validators
 pub fn live_config() -> Result<ChainSpec, String> {
 	// configure GOS currency symbol for the native coin
 	let symbol_value = json!(SYMBOL);
@@ -651,7 +649,7 @@ pub(crate) mod tests {
 	use sp_runtime::BuildStorage;
 
 	fn local_testnet_genesis_instant_single() -> RuntimeGenesisConfig {
-		testnet_genesis(
+		genesis_config(
 			vec![authority_keys_from_seed("Alice")],
 			vec![],
 			get_account_id_from_seed::<sr25519::Public>("Alice"),
