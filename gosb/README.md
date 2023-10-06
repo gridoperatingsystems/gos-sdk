@@ -1,10 +1,6 @@
 # GOSB
 
-<p align="center">
-  <img src="../substrate/docs/media/gos-black.jpg">
-</p>
-
-Grid Operating Systems blockchain for Decentralized data networks.
+Grid Operating Systems Blockchain Node Project.
 
 ## Getting Started
 
@@ -16,19 +12,19 @@ instructions](./docker/README.md) to quickly run Substrate, Substrate Node Templ
 
 Join the highly active and supportive community on the [Substrate Stack Exchange](https://substrate.stackexchange.com/)
 to ask questions about use and problems you run into using this software. Please do report bugs and [issues
-here](https://github.com/paritytech/polkadot-sdk/issues) for anything you suspect requires action in the source.
+here](https://github.com/gridoperatingsystems/gos-sdk/issues) for anything you suspect requires action in the source.
 
 ## Contributions & Code of Conduct
 
 Please follow the contributions guidelines as outlined in
-[`docs/CONTRIBUTING.md`](https://github.com/paritytech/polkadot-sdk/blob/master/docs/CONTRIBUTING.md). In all
+[`docs/CONTRIBUTING.md`](https://github.com/gridoperatingsystems/gos-sdk/tree/main/docs/CONTRIBUTING.md). In all
 communications and contributions, this project follows the [Contributor Covenant Code of
-Conduct](https://github.com/paritytech/polkadot-sdk/blob/master/docs/CODE_OF_CONDUCT.md).
+Conduct](https://github.com/gridoperatingsystems/gos-sdk/tree/main/docs/CODE_OF_CONDUCT.md).
 
 ## Security
 
 The security policy and procedures can be found in
-[`docs/SECURITY.md`](https://github.com/paritytech/polkadot-sdk/blob/master/docs/SECURITY.md).
+[`docs/SECURITY.md`](https://github.com/gridoperatingsystems/gos-sdk/tree/main/docs/SECURITY.md).
 
 ## License
 
