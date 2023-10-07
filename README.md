@@ -15,6 +15,8 @@ The GOS SDK repository provides all the resources needed to start building on th
 
 The Grid Operating Systems (GOS) ecosystem is composed of decentralized components that encompass storage, computation, and blockchain services. It also includes storage and computation agent networks that manage the flow of services and information.
 
+- gcli : GCLI is a command line interface program that allows users to manage and interact with the GOS Blockchain and GOS Network Services. It provides a familiar experience for developers by drawing inspiration from the Linux terminal and its operating system structure. GCLI offers a range of commands for navigation, file and directory operations, utilities and monitoring, help and documentation, keychain management, networking and provider management, and data integrity and blockchain management.
+
 - gosb : Blockchain Node is a hybrid blockchain architecture that combines Proof of Authority (PoA) and Nominated Proof of Stake (nPoS) consensus mechanisms. It serves as the \"source of truth\" for the GOS network and provides flexible and scalable storage and computation solutions.
 
 - gosf : Fusion Node is a specialized server that serves as a consolidated source of truth for each data network within the GOS Ecosystem. It integrates with Veilid to establish a \"Veilid network\" similar to IPFS and Tor but with superior speed and design. The Fusion Node ensures data integrity by documenting all storage, computation transactions, and node operations on its internal blockchain. It acts as a controller between the GOS CLI, Web Console or API access, and the GOS static or dynamic infrastructure.
