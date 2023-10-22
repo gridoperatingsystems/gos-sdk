@@ -20,7 +20,7 @@
 
 use crate::keyring::*;
 use gos_runtime::{
-	constants::currency::*, wasm_binary_unwrap, AccountId, AssetsConfig, BabeConfig,
+	constants::currency::*, wasm_binary_unwrap, AccountId, BabeConfig,
 	BalancesConfig, GluttonConfig, GrandpaConfig, IndicesConfig, RuntimeGenesisConfig,
 	SessionConfig, StakerStatus, StakingConfig, SystemConfig,
 	BABE_GENESIS_EPOCH_CONFIG,
@@ -93,8 +93,6 @@ pub fn config_endowed(code: Option<&[u8]>, extra_endowed: Vec<AccountId>) -> Run
 		sudo: Default::default(),
 		treasury: Default::default(),
 		vesting: Default::default(),
-		assets: AssetsConfig { assets: vec![(1, alice(), true, 1)], ..Default::default() },
-		pool_assets: Default::default(),
 		transaction_storage: Default::default(),
 		transaction_payment: Default::default(),
 		nomination_pools: Default::default(),

@@ -90,7 +90,7 @@ pub fn create_extrinsic(
 		.checked_next_power_of_two()
 		.map(|c| c / 2)
 		.unwrap_or(2) as u64;
-	let tip = 0;
+	
 	let extra: gos_runtime::SignedExtra = (
 		frame_system::CheckNonZeroSender::<gos_runtime::Runtime>::new(),
 		frame_system::CheckSpecVersion::<gos_runtime::Runtime>::new(),
@@ -102,9 +102,6 @@ pub fn create_extrinsic(
 		)),
 		frame_system::CheckNonce::<gos_runtime::Runtime>::from(nonce),
 		frame_system::CheckWeight::<gos_runtime::Runtime>::new(),
-		pallet_asset_conversion_tx_payment::ChargeAssetTxPayment::<gos_runtime::Runtime>::from(
-			tip, None,
-		),
 	);
 
 	let raw_payload = gos_runtime::SignedPayload::from_raw(
@@ -116,7 +113,6 @@ pub fn create_extrinsic(
 			gos_runtime::VERSION.transaction_version,
 			genesis_hash,
 			best_hash,
-			(),
 			(),
 			(),
 		),
@@ -840,8 +836,8 @@ mod tests {
 				let check_era = frame_system::CheckEra::from(Era::Immortal);
 				let check_nonce = frame_system::CheckNonce::from(index);
 				let check_weight = frame_system::CheckWeight::new();
-				let tx_payment =
-					pallet_asset_conversion_tx_payment::ChargeAssetTxPayment::from(0, None);
+				// let tx_payment =
+				// 	pallet_asset_conversion_tx_payment::ChargeAssetTxPayment::from(0, None);
 				let extra = (
 					check_non_zero_sender,
 					check_spec_version,
@@ -850,7 +846,7 @@ mod tests {
 					check_era,
 					check_nonce,
 					check_weight,
-					tx_payment,
+					(),
 				);
 				let raw_payload = SignedPayload::from_raw(
 					function,
