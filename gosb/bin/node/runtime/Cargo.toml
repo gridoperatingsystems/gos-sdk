@@ -1,12 +1,12 @@
 [package]
 name = "gos-runtime"
-version = "3.0.0-dev"
+version = "1.0.0"
 authors.workspace = true
 description = "Grid Operating Systems node runtime."
 edition.workspace = true
 build = "build.rs"
 license = "Apache-2.0"
-homepage = "https://substrate.io"
+homepage = "https://gridoperatingsystems.com"
 repository.workspace = true
 publish = false
 
@@ -57,10 +57,8 @@ frame-system-benchmarking = { path = "../../../frame/system/benchmarking", defau
 frame-election-provider-support = { path = "../../../frame/election-provider-support", default-features = false}
 frame-system-rpc-runtime-api = { path = "../../../frame/system/rpc/runtime-api", default-features = false}
 frame-try-runtime = { path = "../../../frame/try-runtime", default-features = false, optional = true }
+
 pallet-alliance = { path = "../../../frame/alliance", default-features = false}
-pallet-asset-conversion = { path = "../../../frame/asset-conversion", default-features = false}
-pallet-asset-rate = { path = "../../../frame/asset-rate", default-features = false}
-pallet-assets = { path = "../../../frame/assets", default-features = false}
 pallet-authority-discovery = { path = "../../../frame/authority-discovery", default-features = false}
 pallet-authorship = { path = "../../../frame/authorship", default-features = false}
 pallet-babe = { path = "../../../frame/babe", default-features = false}
@@ -118,8 +116,6 @@ pallet-treasury = { path = "../../../frame/treasury", default-features = false}
 pallet-utility = { path = "../../../frame/utility", default-features = false}
 pallet-transaction-payment = { path = "../../../frame/transaction-payment", default-features = false}
 pallet-transaction-payment-rpc-runtime-api = { path = "../../../frame/transaction-payment/rpc/runtime-api", default-features = false}
-pallet-asset-conversion-tx-payment = { path = "../../../frame/transaction-payment/asset-conversion-tx-payment", default-features = false}
-pallet-asset-tx-payment = { path = "../../../frame/transaction-payment/asset-tx-payment", default-features = false}
 pallet-transaction-storage = { path = "../../../frame/transaction-storage", default-features = false}
 pallet-vesting = { path = "../../../frame/vesting", default-features = false}
 pallet-whitelist = { path = "../../../frame/whitelist", default-features = false}
@@ -146,11 +142,6 @@ std = [
 	"log/std",
 	"node-primitives/std",
 	"pallet-alliance/std",
-	"pallet-asset-conversion-tx-payment/std",
-	"pallet-asset-conversion/std",
-	"pallet-asset-rate/std",
-	"pallet-asset-tx-payment/std",
-	"pallet-assets/std",
 	"pallet-authority-discovery/std",
 	"pallet-authorship/std",
 	"pallet-babe/std",
@@ -238,10 +229,6 @@ runtime-benchmarks = [
 	"frame-system-benchmarking/runtime-benchmarks",
 	"frame-system/runtime-benchmarks",
 	"pallet-alliance/runtime-benchmarks",
-	"pallet-asset-conversion/runtime-benchmarks",
-	"pallet-asset-rate/runtime-benchmarks",
-	"pallet-asset-tx-payment/runtime-benchmarks",
-	"pallet-assets/runtime-benchmarks",
 	"pallet-babe/runtime-benchmarks",
 	"pallet-bags-list/runtime-benchmarks",
 	"pallet-balances/runtime-benchmarks",
@@ -302,11 +289,6 @@ try-runtime = [
 	"frame-system/try-runtime",
 	"frame-try-runtime/try-runtime",
 	"pallet-alliance/try-runtime",
-	"pallet-asset-conversion-tx-payment/try-runtime",
-	"pallet-asset-conversion/try-runtime",
-	"pallet-asset-rate/try-runtime",
-	"pallet-asset-tx-payment/try-runtime",
-	"pallet-assets/try-runtime",
 	"pallet-authority-discovery/try-runtime",
 	"pallet-authorship/try-runtime",
 	"pallet-babe/try-runtime",

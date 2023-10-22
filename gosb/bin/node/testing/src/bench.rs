@@ -296,7 +296,7 @@ impl<'a> Iterator for BlockContentIterator<'a> {
 			CheckedExtrinsic {
 				signed: Some((
 					sender,
-					signed_extra(0, gos_runtime::ExistentialDeposit::get() + 1),
+					signed_extra(0),
 				)),
 				function: match self.content.block_type {
 					BlockType::RandomTransfersKeepAlive =>

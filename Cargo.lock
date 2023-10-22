@@ -3453,7 +3453,7 @@ dependencies = [
 
 [[package]]
 name = "gos-runtime"
-version = "3.0.0-dev"
+version = "1.0.0"
 dependencies = [
  "frame-benchmarking",
  "frame-benchmarking-pallet-pov",
@@ -3467,11 +3467,6 @@ dependencies = [
  "log",
  "node-primitives",
  "pallet-alliance",
- "pallet-asset-conversion",
- "pallet-asset-conversion-tx-payment",
- "pallet-asset-rate",
- "pallet-asset-tx-payment",
- "pallet-assets",
  "pallet-authority-discovery",
  "pallet-authorship",
  "pallet-babe",

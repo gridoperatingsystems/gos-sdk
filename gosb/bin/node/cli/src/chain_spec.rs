@@ -389,12 +389,12 @@ pub fn genesis_config(
 		technical_membership: Default::default(),
 		treasury: Default::default(),
 		vesting: Default::default(),
-		assets: pallet_assets::GenesisConfig {
-			// This asset is used by the NIS pallet as counterpart currency.
-			assets: vec![(0, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1)],
-			..Default::default()
-		},
-		pool_assets: Default::default(),
+		// assets: pallet_assets::GenesisConfig {
+		// 	// This asset is used by the NIS pallet as counterpart currency.
+		// 	assets: vec![(0, get_account_id_from_seed::<sr25519::Public>("Alice"), true, 1)],
+		// 	..Default::default()
+		// },
+		// pool_assets: Default::default(),
 		transaction_storage: Default::default(),
 		transaction_payment: Default::default(),
 		safe_mode: Default::default(),
