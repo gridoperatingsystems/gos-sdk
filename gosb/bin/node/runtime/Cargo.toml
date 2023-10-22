@@ -70,8 +70,7 @@ pallet-bounties = { path = "../../../frame/bounties", default-features = false}
 pallet-broker = { path = "../../../frame/broker", default-features = false}
 pallet-child-bounties = { path = "../../../frame/child-bounties", default-features = false}
 pallet-collective = { path = "../../../frame/collective", default-features = false}
-pallet-contracts = { path = "../../../frame/contracts", default-features = false}
-pallet-contracts-primitives = { path = "../../../frame/contracts/primitives", default-features = false}
+
 pallet-conviction-voting = { path = "../../../frame/conviction-voting", default-features = false}
 pallet-core-fellowship = { path = "../../../frame/core-fellowship", default-features = false}
 pallet-democracy = { path = "../../../frame/democracy", default-features = false}
@@ -161,8 +160,6 @@ std = [
 	"pallet-broker/std",
 	"pallet-child-bounties/std",
 	"pallet-collective/std",
-	"pallet-contracts-primitives/std",
-	"pallet-contracts/std",
 	"pallet-conviction-voting/std",
 	"pallet-core-fellowship/std",
 	"pallet-democracy/std",
@@ -252,7 +249,6 @@ runtime-benchmarks = [
 	"pallet-broker/runtime-benchmarks",
 	"pallet-child-bounties/runtime-benchmarks",
 	"pallet-collective/runtime-benchmarks",
-	"pallet-contracts/runtime-benchmarks",
 	"pallet-conviction-voting/runtime-benchmarks",
 	"pallet-core-fellowship/runtime-benchmarks",
 	"pallet-democracy/runtime-benchmarks",
@@ -320,7 +316,6 @@ try-runtime = [
 	"pallet-broker/try-runtime",
 	"pallet-child-bounties/try-runtime",
 	"pallet-collective/try-runtime",
-	"pallet-contracts/try-runtime",
 	"pallet-conviction-voting/try-runtime",
 	"pallet-core-fellowship/try-runtime",
 	"pallet-democracy/try-runtime",

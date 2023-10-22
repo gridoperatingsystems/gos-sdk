@@ -88,13 +88,10 @@ use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 use static_assertions::const_assert;
 
-#[cfg(any(feature = "std", test))]
+
 pub use frame_system::Call as SystemCall;
-#[cfg(any(feature = "std", test))]
 pub use pallet_balances::Call as BalancesCall;
-#[cfg(any(feature = "std", test))]
 pub use pallet_staking::StakerStatus;
-#[cfg(any(feature = "std", test))]
 pub use pallet_sudo::Call as SudoCall;
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
@@ -1281,49 +1278,12 @@ impl pallet_tips::Config for Runtime {
 	type WeightInfo = pallet_tips::weights::SubstrateWeight<Runtime>;
 }
 
-parameter_types! {
-	pub const DepositPerItem: Balance = deposit(1, 0);
-	pub const DepositPerByte: Balance = deposit(0, 1);
-	pub const DefaultDepositLimit: Balance = deposit(1024, 1024 * 1024);
-	pub Schedule: pallet_contracts::Schedule<Runtime> = Default::default();
-	pub CodeHashLockupDepositPercent: Perbill = Perbill::from_percent(30);
-}
+pub enum AllowBalancesCall {}
 
-impl pallet_contracts::Config for Runtime {
-	type Time = Timestamp;
-	type Randomness = RandomnessCollectiveFlip;
-	type Currency = Balances;
-	type RuntimeEvent = RuntimeEvent;
-	type RuntimeCall = RuntimeCall;
-	/// The safest default is to allow no calls at all.
-	///
-	/// Runtimes should whitelist dispatchables that are allowed to be called from contracts
-	/// and make sure they are stable. Dispatchables exposed to contracts are not allowed to
-	/// change because that would break already deployed contracts. The `Call` structure itself
-	/// is not allowed to change the indices of existing pallets, too.
-	type CallFilter = Nothing;
-	type DepositPerItem = DepositPerItem;
-	type DepositPerByte = DepositPerByte;
-	type DefaultDepositLimit = DefaultDepositLimit;
-	type CallStack = [pallet_contracts::Frame<Self>; 5];
-	type WeightPrice = pallet_transaction_payment::Pallet<Self>;
-	type WeightInfo = pallet_contracts::weights::SubstrateWeight<Self>;
-	type ChainExtension = ();
-	type Schedule = Schedule;
-	type AddressGenerator = pallet_contracts::DefaultAddressGenerator;
-	type MaxCodeLen = ConstU32<{ 123 * 1024 }>;
-	type MaxStorageKeyLen = ConstU32<128>;
-	type UnsafeUnstableInterface = ConstBool<false>;
-	type MaxDebugBufferLen = ConstU32<{ 2 * 1024 * 1024 }>;
-	type RuntimeHoldReason = RuntimeHoldReason;
-	#[cfg(not(feature = "runtime-benchmarks"))]
-	type Migrations = ();
-	#[cfg(feature = "runtime-benchmarks")]
-	type Migrations = pallet_contracts::migration::codegen::BenchMigrations;
-	type MaxDelegateDependencies = ConstU32<32>;
-	type CodeHashLockupDepositPercent = CodeHashLockupDepositPercent;
-	type Debug = ();
-	type Environment = ();
+impl frame_support::traits::Contains<RuntimeCall> for AllowBalancesCall {
+	fn contains(call: &RuntimeCall) -> bool {
+		matches!(call, RuntimeCall::Balances(BalancesCall::transfer_allow_death { .. }))
+	}
 }
 
 impl pallet_sudo::Config for Runtime {
@@ -1793,7 +1753,6 @@ construct_runtime!(
 		Grandpa: pallet_grandpa,
 		Treasury: pallet_treasury,
 		AssetRate: pallet_asset_rate,
-		Contracts: pallet_contracts,
 		Sudo: pallet_sudo,
 		ImOnline: pallet_im_online,
 		AuthorityDiscovery: pallet_authority_discovery,
@@ -1882,8 +1841,6 @@ pub type Executive = frame_executive::Executive<
 // `OnRuntimeUpgrade`.
 type Migrations = (
 	pallet_nomination_pools::migration::v2::MigrateToV2<Runtime>,
-	// pallet_alliance::migration::Migration<Runtime>,
-	pallet_contracts::Migration<Runtime>,
 );
 
 type EventRecord = frame_system::EventRecord<
@@ -1916,7 +1873,6 @@ mod benches {
 		[pallet_child_bounties, ChildBounties]
 		[pallet_collective, Council]
 		[pallet_conviction_voting, ConvictionVoting]
-		[pallet_contracts, Contracts]
 		// [pallet_core_fellowship, CoreFellowship]
 		[pallet_democracy, Democracy]
 		[pallet_asset_conversion, AssetConversion]
@@ -2160,80 +2116,6 @@ impl_runtime_apis! {
 	{
 		fn account_balances(account: AccountId) -> Vec<(u32, Balance)> {
 			Assets::account_balances(account)
-		}
-	}
-
-	impl pallet_contracts::ContractsApi<Block, AccountId, Balance, BlockNumber, Hash, EventRecord> for Runtime
-	{
-		fn call(
-			origin: AccountId,
-			dest: AccountId,
-			value: Balance,
-			gas_limit: Option<Weight>,
-			storage_deposit_limit: Option<Balance>,
-			input_data: Vec<u8>,
-		) -> pallet_contracts_primitives::ContractExecResult<Balance, EventRecord> {
-			let gas_limit = gas_limit.unwrap_or(RuntimeBlockWeights::get().max_block);
-			Contracts::bare_call(
-				origin,
-				dest,
-				value,
-				gas_limit,
-				storage_deposit_limit,
-				input_data,
-				pallet_contracts::DebugInfo::UnsafeDebug,
-				pallet_contracts::CollectEvents::UnsafeCollect,
-				pallet_contracts::Determinism::Enforced,
-			)
-		}
-
-		fn instantiate(
-			origin: AccountId,
-			value: Balance,
-			gas_limit: Option<Weight>,
-			storage_deposit_limit: Option<Balance>,
-			code: pallet_contracts_primitives::Code<Hash>,
-			data: Vec<u8>,
-			salt: Vec<u8>,
-		) -> pallet_contracts_primitives::ContractInstantiateResult<AccountId, Balance, EventRecord>
-		{
-			let gas_limit = gas_limit.unwrap_or(RuntimeBlockWeights::get().max_block);
-			Contracts::bare_instantiate(
-				origin,
-				value,
-				gas_limit,
-				storage_deposit_limit,
-				code,
-				data,
-				salt,
-				pallet_contracts::DebugInfo::UnsafeDebug,
-				pallet_contracts::CollectEvents::UnsafeCollect,
-			)
-		}
-
-		fn upload_code(
-			origin: AccountId,
-			code: Vec<u8>,
-			storage_deposit_limit: Option<Balance>,
-			determinism: pallet_contracts::Determinism,
-		) -> pallet_contracts_primitives::CodeUploadResult<Hash, Balance>
-		{
-			Contracts::bare_upload_code(
-				origin,
-				code,
-				storage_deposit_limit,
-				determinism,
-			)
-		}
-
-		fn get_storage(
-			address: AccountId,
-			key: Vec<u8>,
-		) -> pallet_contracts_primitives::GetStorageResult {
-			Contracts::get_storage(
-				address,
-				key
-			)
 		}
 	}
 

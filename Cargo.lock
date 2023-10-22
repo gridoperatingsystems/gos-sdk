@@ -3481,8 +3481,6 @@ dependencies = [
  "pallet-broker",
  "pallet-child-bounties",
  "pallet-collective",
- "pallet-contracts",
- "pallet-contracts-primitives",
  "pallet-conviction-voting",
  "pallet-core-fellowship",
  "pallet-democracy",
